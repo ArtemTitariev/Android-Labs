@@ -4,6 +4,7 @@ import Place
 import com.example.lr5.R
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lr5.databinding.ActivityPlaceListBinding
@@ -23,6 +24,11 @@ class PlaceListActivity : AppCompatActivity() {
 
         initPlaces()
 
+        if (!checkPlaces() )
+        {
+            return
+        }
+
         val layoutManager = LinearLayoutManager(this)
         binding.placeRecyclerView.layoutManager = layoutManager
 
@@ -30,7 +36,20 @@ class PlaceListActivity : AppCompatActivity() {
         binding.placeRecyclerView.adapter = adapter
     }
 
+    private fun checkPlaces(): Boolean {
+        if (placeList.isEmpty()) {
+            val emptyMessage = "List of places is empty!"
 
+            binding.alertTextView.text = emptyMessage
+            binding.alertTextView.visibility = View.VISIBLE
+
+            return false
+        } else {
+            binding.alertTextView.visibility = View.GONE
+            return true
+        }
+
+    }
 
     private fun initPlaces() {
         placeList.add(Place("Art Museum", "Unique collection", "Culture Street, 12", 15.0))

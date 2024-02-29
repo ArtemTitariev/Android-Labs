@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 
 class PlaceAdapter(val placeList: List<Place>) :
     RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
@@ -31,13 +29,6 @@ class PlaceAdapter(val placeList: List<Place>) :
             val intent = Intent(parent.context, PlaceDetailsActivity::class.java)
             intent.putExtra("place", place)
             parent.context.startActivity(intent)
-
-//            Toast.makeText(
-//                parent.context, "you clicked view ${
-//                    place.name
-//                }",
-//                Toast.LENGTH_SHORT
-//            ).show()
         }
 
         return viewHolder
