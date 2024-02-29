@@ -3,8 +3,11 @@ package com.example.lr5
 import com.example.lr5.R
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lr5.databinding.ActivityPlaceListBinding
 import com.example.lr5.databinding.PlaceItemBinding
+
 
 class PlaceListActivity : AppCompatActivity() {
 
@@ -14,15 +17,19 @@ class PlaceListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /*var*/ binding /*: ActivityPlaceListBinding*/ = ActivityPlaceListBinding.inflate(layoutInflater)
+        binding = ActivityPlaceListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         initPlaces()
 
-        val adapter = PlaceAdapter(this, R.layout.place_item, placeList)
-        binding.placeListView.adapter = adapter
+        val layoutManager = LinearLayoutManager(this)
+        binding.placeRecyclerView.layoutManager = layoutManager
+
+        val adapter = PlaceAdapter(placeList)
+        binding.placeRecyclerView.adapter = adapter
     }
+
+
 
     private fun initPlaces() {
         placeList.add(Place("Art Museum", "Unique collection", "Culture Street, 12", 15.0))
@@ -36,5 +43,4 @@ class PlaceListActivity : AppCompatActivity() {
         placeList.add(Place("Sports Complex 'Energy'", "Fitness and sports", "Endurance Street, 15", 28.0))
         placeList.add(Place("Beach 'Sunbay'", "Relaxation by the shore", "Sea Breeze Boulevard, 50", 0.0))
     }
-
 }

@@ -1,28 +1,45 @@
 package com.example.lr5
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import android.widget.Toast
 
-class PlaceAdapter (activity: Activity, val resourceId: Int, data: List<Place>) :
-    ArrayAdapter<Place>(activity, resourceId, data) {
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-
-        val view = LayoutInflater.from(context).inflate(resourceId, parent, false)
-
+class PlaceAdapter(val placeList: List<Place>) :
+    RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val placeName: TextView = view.findViewById(R.id.placeName)
         val placeDescription: TextView = view.findViewById(R.id.placeDescription)
+    }
 
-        val place = getItem(position)
-        if (place != null) {
-            placeName.text = place.name
-            placeDescription.text = place.description
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
+            ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.place_item, parent, false)
+
+        // On Click
+        val viewHolder = ViewHolder(view)
+        viewHolder.itemView.setOnClickListener {
+            val position = viewHolder.adapterPosition
+            val place = placeList[position]
+            Toast.makeText(
+                parent.context, "you clicked view ${
+                    place.name
+                }",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        return view
+        return viewHolder
     }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val place = placeList[position]
+        holder.placeName.text = place.name
+        holder.placeDescription.text = place.description
+    }
+
+    override fun getItemCount() = placeList.size
 }
