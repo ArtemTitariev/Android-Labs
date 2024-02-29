@@ -1,5 +1,6 @@
 package com.example.lr5
 
+import Place
 import com.example.lr5.R
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

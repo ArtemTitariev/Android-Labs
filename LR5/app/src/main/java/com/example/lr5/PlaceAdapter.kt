@@ -1,11 +1,14 @@
 package com.example.lr5
 
+import Place
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 
 class PlaceAdapter(val placeList: List<Place>) :
     RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
@@ -24,12 +27,17 @@ class PlaceAdapter(val placeList: List<Place>) :
         viewHolder.itemView.setOnClickListener {
             val position = viewHolder.adapterPosition
             val place = placeList[position]
-            Toast.makeText(
-                parent.context, "you clicked view ${
-                    place.name
-                }",
-                Toast.LENGTH_SHORT
-            ).show()
+
+            val intent = Intent(parent.context, PlaceDetailsActivity::class.java)
+            intent.putExtra("place", place)
+            parent.context.startActivity(intent)
+
+//            Toast.makeText(
+//                parent.context, "you clicked view ${
+//                    place.name
+//                }",
+//                Toast.LENGTH_SHORT
+//            ).show()
         }
 
         return viewHolder
