@@ -31,14 +31,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val title = intent.getStringExtra("note_title")
-//        val content = intent.getStringExtra("note_content")
-//        if (title != null && content != null) {
-//            var fragment =
-//                supportFragmentManager.findFragmentById(R.id.createViewNoteFragment) as ViewNoteFragment
-//            fragment.refresh(title, content)
-//        }
-
         replaceFragment(CreateNoteFragment())
 
         binding.btnCreate.setOnClickListener {
@@ -75,7 +67,6 @@ class MainActivity : AppCompatActivity() {
         clearForm()
 
         //supportFragmentManager.popBackStack()
-
     }
 
     fun validateNote(note: MathNote): Boolean {

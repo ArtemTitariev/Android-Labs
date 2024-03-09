@@ -33,7 +33,6 @@ class NoteListFragment : Fragment() {
 
         // Ініціалізувати RecyclerView та адаптер
         noteAdapter = NoteAdapter()
-
         noteAdapter?.submitList(getNotes())
 
         binding.recyclerView.adapter = noteAdapter
@@ -77,27 +76,10 @@ class NoteListFragment : Fragment() {
         fun editNote(savedNote: MathNote, newNote: MathNote) {
             val position = noteList.indexOfFirst { it.title == savedNote.title }
 
-            Toast.makeText(
-                activity, "position = $position",
-                Toast.LENGTH_SHORT
-            ).show()
-
             if (position != -1) {
                 noteList.set(position, newNote)
                 notifyDataSetChanged()
-
-                Toast.makeText(
-                    activity,
-                    "editing---",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
-
-            Toast.makeText(
-                activity,
-                "end of edit",
-                Toast.LENGTH_SHORT
-            ).show()
         }
 
         inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -108,7 +90,6 @@ class NoteListFragment : Fragment() {
 
                 // Слухач на клік для переходу до деталей замітки
                 itemView.setOnClickListener {
-                    // Визначити дії, які виконуються при натисканні на елемент
                     val context = itemView.context
                     val viewNoteFragment = ViewNoteFragment()
 
@@ -142,10 +123,6 @@ class NoteListFragment : Fragment() {
         transaction.addToBackStack(null)
         transaction.commit()
     }
-
-//    fun addNote(note: MathNote) {
-//        noteAdapter?.noteList?.add(note)
-//    }
 
     private fun getNotes(): MutableList<MathNote> {
         return mutableListOf(

@@ -14,6 +14,7 @@ class CreateNoteFragment : Fragment() {
     lateinit var binding: CreateNoteFragmentBinding
 
     private var isEditing = false
+
     private lateinit var savedNote: MathNote
 
     override fun onCreateView(

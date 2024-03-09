@@ -27,7 +27,7 @@ class ViewNoteFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        // Отримайте дані з аргументів
+        // Дані з аргументів
         arguments?.let {
             title = it.getString("note_title")
             content = it.getString("note_content")
