@@ -34,6 +34,13 @@ class ViewNoteFragment : Fragment() {
         }
 
         refresh(/*title, content*/)
+
+        // Update
+        binding.btnUpdate.setOnClickListener {
+            val mainActivity = activity as MainActivity
+
+            mainActivity.openCreateViewActivity(title, content)
+        }
     }
     fun refresh(/*title: String?, content: String?*/) {
         binding.twNoteTitle.text = title

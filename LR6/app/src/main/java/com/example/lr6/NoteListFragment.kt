@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,16 +34,20 @@ class NoteListFragment : Fragment() {
         // Ініціалізувати RecyclerView та адаптер
         noteAdapter = NoteAdapter()
 
-
         noteAdapter?.submitList(getNotes())
 
         binding.recyclerView.adapter = noteAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
+    fun getNoteAdapter(): NoteAdapter? {
+        return noteAdapter
+    }
+
     inner class NoteAdapter : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
-        private var noteList: List<MathNote> = ArrayList()
+        var noteList: MutableList<MathNote> = ArrayList()
+            private set
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
             val itemView = LayoutInflater.from(parent.context)
@@ -59,9 +64,40 @@ class NoteListFragment : Fragment() {
             return noteList.size
         }
 
-        fun submitList(newList: List<MathNote>) {
+        fun submitList(newList: MutableList<MathNote>) {
             noteList = newList
             notifyDataSetChanged()
+        }
+
+        fun addNote(note: MathNote) {
+            noteList.add(note)
+            notifyDataSetChanged()
+        }
+
+        fun editNote(savedNote: MathNote, newNote: MathNote) {
+            val position = noteList.indexOfFirst { it.title == savedNote.title }
+
+            Toast.makeText(
+                activity, "position = $position",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            if (position != -1) {
+                noteList.set(position, newNote)
+                notifyDataSetChanged()
+
+                Toast.makeText(
+                    activity,
+                    "editing---",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            Toast.makeText(
+                activity,
+                "end of edit",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -106,8 +142,13 @@ class NoteListFragment : Fragment() {
         transaction.addToBackStack(null)
         transaction.commit()
     }
-    private fun getNotes(): List<MathNote> {
-        return listOf(
+
+//    fun addNote(note: MathNote) {
+//        noteAdapter?.noteList?.add(note)
+//    }
+
+    private fun getNotes(): MutableList<MathNote> {
+        return mutableListOf(
             MathNote("Algebra Basics", "Review basic algebraic concepts and operations."),
             MathNote("Geometry Formulas", "Learn and memorize important geometry formulas."),
             MathNote("Calculus Fundamentals", "Understand the fundamentals of calculus, including limits and derivatives."),
@@ -126,41 +167,4 @@ class NoteListFragment : Fragment() {
             MathNote("Advanced Topics in Calculus", "Explore advanced topics in calculus, such as multivariable calculus.")
         )
     }
-
-//    inner class MathNoteAdapter(val noteList: List<MathNote>) :
-//        RecyclerView.Adapter<MathNoteAdapter.ViewHolder>() {
-//        inner class ViewHolder(view: View) : RecyclerView.ViewHolder
-//            (view) {
-//            val newsTitle: TextView = view.findViewById(R.id.twNoteTitle)
-//        }
-//
-//        override fun onCreateViewHolder(
-//            parent: ViewGroup, viewType:
-//            Int
-//        ): ViewHolder {
-//            val view = LayoutInflater.from(parent.context)
-//                .inflate(R.layout.news_item, parent, false)
-//            val holder = ViewHolder(view)
-//            holder.itemView.setOnClickListener {
-//                val note = noteList[holder.adapterPosition]
-////                if (isTwoPane) {
-////                    val fragment =
-////                        activity?.supportFragmentManager?.findFragmentById(R.id.newsContentFrag) as NewsContentFragment
-////                    fragment.refresh(news.title, news.content)
-////                } else {
-//                MainActivity.actionStart(
-//                    parent.context, note.title,
-//                    note.content
-//                )
-////                }
-//            }
-//            return holder
-//        }
-//
-//        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//            val note = noteList[position]
-//            holder.twNoteTitle.text = note.title
-//        }
-//        override fun getItemCount() = noteList.size
-//    }
 }

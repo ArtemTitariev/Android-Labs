@@ -54,4 +54,58 @@ class MainActivity : AppCompatActivity() {
 
         transaction.commit()
     }
+
+    fun createNote(note: MathNote) {
+        if (!validateNote(note)) return
+
+        val noteListFragment = supportFragmentManager.findFragmentById(R.id.noteListFragment) as? NoteListFragment
+
+        noteListFragment?.getNoteAdapter()?.addNote(note)
+        clearForm()
+
+        //supportFragmentManager.popBackStack()
+    }
+
+    fun editNote(savedNote: MathNote, newNote: MathNote) {
+        if (!validateNote(newNote)) return
+
+        val noteListFragment = supportFragmentManager.findFragmentById(R.id.noteListFragment) as? NoteListFragment
+
+        noteListFragment?.getNoteAdapter()?.editNote(savedNote, newNote)
+        clearForm()
+
+        //supportFragmentManager.popBackStack()
+
+    }
+
+    fun validateNote(note: MathNote): Boolean {
+        if (note.title.length < 2 || note.content.length < 2) {
+            Toast.makeText(
+                applicationContext,
+                "Title or content is too short!",
+                Toast.LENGTH_LONG
+            ).show()
+            return false
+        }
+        return true
+    }
+
+    fun clearForm() {
+        val fragment =
+               supportFragmentManager.findFragmentById(R.id.createViewNoteFragment) as CreateNoteFragment
+        fragment.reset()
+    }
+
+    fun openCreateViewActivity(title: String?, content: String?) {
+        val fragment = CreateNoteFragment()
+
+        val bundle = Bundle().apply {
+            putString("note_title", title)
+            putString("note_content", content)
+        }
+
+        fragment.arguments = bundle
+
+        replaceFragment(fragment)
+    }
 }

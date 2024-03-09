@@ -20,4 +20,13 @@
         android:padding="15dp"
         android:textSize="18sp" />
 
+    <Button
+        android:id="@+id/btnUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="#FF5733"
+        android:text="Update" />
+
     </LinearLayout>
