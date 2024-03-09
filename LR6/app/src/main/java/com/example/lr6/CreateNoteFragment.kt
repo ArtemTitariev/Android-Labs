@@ -29,12 +29,11 @@ class CreateNoteFragment : Fragment() {
         val mainActivity = activity as MainActivity
         binding.btnSave.setOnClickListener {
             val transaction = mainActivity.supportFragmentManager.beginTransaction()
+
             transaction.replace(R.id.createViewNoteFragment, ViewNoteFragment())
             transaction.addToBackStack(null)
+
             transaction.commit()
-
-            //Toast.makeText(mainActivity, "Save note click btn", Toast.LENGTH_SHORT).show()
-
         }
     }
 }

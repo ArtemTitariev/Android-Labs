@@ -3,10 +3,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/twNoteTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="24sp"
-        android:text="View note fragment" />
-</LinearLayout>
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/twNoteContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="15dp"
+        android:textSize="18sp" />
+
+    </LinearLayout>
