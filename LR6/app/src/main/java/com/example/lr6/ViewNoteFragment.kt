@@ -12,8 +12,20 @@ class ViewNoteFragment : Fragment() {
     lateinit var binding: ViewNoteFragmentBinding
 
     private var title: String? = null
+
     private var content: String? = null
 
+    companion object {
+        fun newInstance(title: String, content: String): ViewNoteFragment {
+            val fragment = ViewNoteFragment()
+            val args = Bundle()
+            args.putString("note_title", title)
+            args.putString("note_content", content)
+            fragment.arguments = args
+
+            return fragment
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container:
         ViewGroup?,
@@ -33,16 +45,23 @@ class ViewNoteFragment : Fragment() {
             content = it.getString("note_content")
         }
 
-        refresh(/*title, content*/)
+        refresh()
 
         // Update
         binding.btnUpdate.setOnClickListener {
             val mainActivity = activity as MainActivity
 
-            mainActivity.openCreateViewActivity(title, content)
+            mainActivity.openCreateViewActivity(title ?: "", content ?: "")
+        }
+
+        // Delete
+        binding.btnDelete.setOnClickListener {
+            val mainActivity = activity as MainActivity
+
+            mainActivity.deleteNote(MathNote(title.toString(), content.toString()))
         }
     }
-    fun refresh(/*title: String?, content: String?*/) {
+    fun refresh() {
         binding.twNoteTitle.text = title
         binding.twNoteContent.text = content
     }

@@ -16,7 +16,6 @@ class NoteListFragment : Fragment() {
 
     lateinit var binding: NoteListFragmentBinding
     private var noteAdapter: NoteAdapter? = null
-//    private var isTwoPane = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container:
@@ -68,19 +67,41 @@ class NoteListFragment : Fragment() {
             notifyDataSetChanged()
         }
 
-        fun addNote(note: MathNote) {
-            noteList.add(note)
+        fun addNote(note: MathNote): Boolean {
+            val result = noteList.add(note)
             notifyDataSetChanged()
+
+            return result;
         }
 
-        fun editNote(savedNote: MathNote, newNote: MathNote) {
-            val position = noteList.indexOfFirst { it.title == savedNote.title }
+        fun editNote(savedNote: MathNote, newNote: MathNote): Boolean {
+            val position = getNotePosition(savedNote)
+            //noteList.indexOfFirst { it.title == savedNote.title }
 
             if (position != -1) {
                 noteList.set(position, newNote)
                 notifyDataSetChanged()
+
+                return true
             }
+            return false
         }
+
+        fun removeNote (note: MathNote): Boolean {
+            val position = getNotePosition(note)
+
+            if (position != -1) {
+                noteList.removeAt(position)
+                notifyDataSetChanged()
+
+                return true
+            }
+            return false
+        }
+
+        private fun getNotePosition(note: MathNote) =
+            noteList.indexOfFirst { it.title == note.title &&  it.content == note.content }
+
 
         inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -90,7 +111,7 @@ class NoteListFragment : Fragment() {
 
                 // Слухач на клік для переходу до деталей замітки
                 itemView.setOnClickListener {
-                    val context = itemView.context
+                    //val context = itemView.context
                     val viewNoteFragment = ViewNoteFragment()
 
                     val bundle = Bundle().apply {
@@ -99,12 +120,9 @@ class NoteListFragment : Fragment() {
                     }
                     viewNoteFragment.arguments = bundle
 
-                    val transaction = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                    val mainActivity = activity as MainActivity
 
-                    transaction.replace(R.id.createViewNoteFragment, viewNoteFragment)
-                    transaction.addToBackStack(null)
-
-                    transaction.commit()
+                   mainActivity.replaceFragment(viewNoteFragment, MainActivity.VIEW_NOTE_FRAGMENT_TAG)
                 }
             }
         }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.lr6.databinding.CreateNoteFragmentBinding
 
@@ -13,9 +12,23 @@ class CreateNoteFragment : Fragment() {
 
     lateinit var binding: CreateNoteFragmentBinding
 
-    private var isEditing = false
+    var isEditing = false
+        private set
 
     private lateinit var savedNote: MathNote
+
+    companion object {
+        fun newInstance(title: String, content: String, isEditing: Boolean = false): CreateNoteFragment {
+            val fragment = CreateNoteFragment()
+            val args = Bundle()
+            args.putString("note_title", title)
+            args.putString("note_content", content)
+            fragment.arguments = args
+            fragment.isEditing = isEditing
+
+            return fragment
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container:
@@ -43,7 +56,6 @@ class CreateNoteFragment : Fragment() {
         // Якщо title та content не null, то це редагування
         if (title != null && content != null) {
             savedNote = MathNote(title, content)
-            isEditing = true
 
             binding.etNoteTitle.setText(title)
             binding.etNoteContent.setText(content)
@@ -60,8 +72,6 @@ class CreateNoteFragment : Fragment() {
             } else {
                 mainActivity.createNote(newNote)
             }
-
-            reset()
         }
     }
 
@@ -71,4 +81,3 @@ class CreateNoteFragment : Fragment() {
         isEditing = false
     }
 }
-
