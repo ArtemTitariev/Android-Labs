@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
 
     private val headphoneReceiver = HeadphoneReceiver()
 
-//    private var isHeadphoneConnected = false
+    private var isHeadphoneConnected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,16 +22,23 @@ class MainActivity : ComponentActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val switch = binding.swEnableHeadphoneBroadcast;
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            isHeadphoneConnected = isChecked
+            if (isChecked) {
+                registerHeadphoneReceiver()
+            } else {
+                unregisterHeadphoneReceiver()
+            }
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun registerHeadphoneReceiver() {
         val filter = IntentFilter(Intent.ACTION_HEADSET_PLUG)
         registerReceiver(headphoneReceiver, filter)
     }
 
-    override fun onStop() {
-        super.onStop()
+    private fun unregisterHeadphoneReceiver() {
         unregisterReceiver(headphoneReceiver)
     }
 
