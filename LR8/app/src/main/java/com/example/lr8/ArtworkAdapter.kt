@@ -1,5 +1,6 @@
 package com.example.lr8
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lr8.models.Artwork
 
-class ArtworkAdapter(private val artworkList: List<Artwork>) : RecyclerView.Adapter<ArtworkAdapter.ArtworkViewHolder>() {
+class ArtworkAdapter(private var artworkList: List<Artwork>) : RecyclerView.Adapter<ArtworkAdapter.ArtworkViewHolder>() {
 
     inner class ArtworkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.textViewTitle)
@@ -26,4 +27,9 @@ class ArtworkAdapter(private val artworkList: List<Artwork>) : RecyclerView.Adap
     }
 
     override fun getItemCount() = artworkList.size
+
+    fun updateList(newList: List<Artwork>) {
+        artworkList = newList
+        notifyDataSetChanged()
+    }
 }

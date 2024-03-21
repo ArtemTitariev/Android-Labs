@@ -14,13 +14,13 @@
         android:layout_height="wrap_content"
         android:hint="Enter genre for filtering:"/>
 
-    <NumberPicker
-        android:id="@+id/npYear"
+    <EditText
+        android:id="@+id/etYear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:contentDescription="Enter year for filtering:"/>
+        android:inputType="number"
+        android:maxLength="4"
+        android:hint="Enter year for filtering:" />
 
     <Button
         android:id="@+id/btnFilter"

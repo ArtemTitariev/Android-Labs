@@ -4,6 +4,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import android.widget.Toast
+import com.example.lr8.MainActivity
 import com.example.lr8.models.ArtGenre
 import com.example.lr8.models.Artwork
 import com.example.lr8.models.Author
@@ -142,19 +144,73 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 // Отримання об'єкта ArtGenre за його id
                 val genre = getArtGenreById(it.getInt(it.getColumnIndex("genre_id")))
 
-                if (author == null || genre == null) {
-                    throw NullPointerException("Author or genre not found.")
-                }
+                checkAuthorAndGenre(author, genre)
 
-                val artwork = Artwork(id, title, year, description, author, genre)
+                val artwork = Artwork(id, title, year, description, author!!, genre!!)
                 artworkList.add(artwork)
             }
         }
         return artworkList
     }
 
+    private fun checkAuthorAndGenre(
+        author: Author?,
+        genre: ArtGenre?
+    ) {
+        if (author == null || genre == null) {
+            throw NullPointerException("Author or genre not found.")
+        }
+    }
 
+    @SuppressLint("Range")
+    fun getFilteredArtworkList(genreFilter: String, yearFilter: Int?): List<Artwork> {
+        val filteredList = mutableListOf<Artwork>()
+        val db = readableDatabase
 
+        val selection = if (genreFilter.isNotEmpty() && yearFilter != null) {
+            "genre LIKE ? AND year = ?"
+        } else if (genreFilter.isNotEmpty()) {
+            "genre LIKE ?"
+        } else if (yearFilter != null) {
+            "year = ?"
+        } else {
+            null
+        }
+
+        val selectionArgs = when {
+            genreFilter.isNotEmpty() && yearFilter != null -> arrayOf("%$genreFilter%", yearFilter.toString())
+            genreFilter.isNotEmpty() -> arrayOf("%$genreFilter%")
+            yearFilter != null -> arrayOf(yearFilter.toString())
+            else -> null
+        }
+
+        val query = "SELECT * FROM $TABLE_ARTWORKS " +
+                "JOIN $TABLE_ART_GENRES ON $TABLE_ARTWORKS.genre_id = $TABLE_ART_GENRES.$COLUMN_ID " +
+                "WHERE $selection"
+
+        val cursor = db.rawQuery(query, selectionArgs)
+
+        cursor.use {
+            while (it.moveToNext()) {
+                val id = it.getInt(it.getColumnIndex(COLUMN_ID))
+                val title = it.getString(it.getColumnIndex("title"))
+                val year = it.getInt(it.getColumnIndex("year"))
+                val description = it.getString(it.getColumnIndex("description"))
+                val authorId = it.getInt(it.getColumnIndex("author_id"))
+                val genreId = it.getInt(it.getColumnIndex("genre_id"))
+
+                val author = getAuthorById(authorId)
+                val genre = getArtGenreById(genreId)
+
+                checkAuthorAndGenre(author, genre)
+
+                val artwork = Artwork(id, title, year, description, author!!, genre!!)
+                filteredList.add(artwork)
+            }
+        }
+
+        return filteredList
+    }
 
 
 
@@ -313,6 +369,4 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             insertArtworkStatement?.close()
         }
     }
-
-
 }
