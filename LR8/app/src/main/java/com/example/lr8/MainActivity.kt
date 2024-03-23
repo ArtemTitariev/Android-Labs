@@ -27,11 +27,12 @@ class MainActivity : AppCompatActivity() {
         replaceFragment(FilterAndListFragment())
     }
 
-    fun replaceFragment(fragment: Fragment) {
+    fun replaceFragment(fragment: Fragment, isAddToBackStack: Boolean = true) {
         val transaction = supportFragmentManager.beginTransaction()
 
         transaction.replace(R.id.fragmentContainer, fragment)
-        transaction.addToBackStack(null)
+        if (isAddToBackStack)
+            transaction.addToBackStack(null)
 
         transaction.commit()
     }

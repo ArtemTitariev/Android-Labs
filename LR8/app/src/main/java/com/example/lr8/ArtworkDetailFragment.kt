@@ -15,6 +15,8 @@ class ArtworkDetailFragment : Fragment() {
 
     private lateinit var mainActivity: MainActivity
 
+    private var artwork: Artwork? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,16 +32,47 @@ class ArtworkDetailFragment : Fragment() {
 
         mainActivity = activity as MainActivity
 
-
-            val title = arguments?.getString("title")!!
-            val description = arguments?.getString("description")!!
+        val title = arguments?.getString("title")!!
+        val description = arguments?.getString("description")!!
 
         try {
-            val artwork = mainActivity.dbHelper.getArtwork(title, description)!!
+            artwork = mainActivity.dbHelper.getArtwork(title, description)!!
 
-            displayData(artwork)
+            displayData(artwork!!)
         } catch (ex: NullPointerException) {
             Toast.makeText(requireContext(), "Failed to load artwork data!", Toast.LENGTH_LONG).show()
+        }
+
+        binding.btnUpdate.setOnClickListener{
+            prepareArtworkUpdate()
+        }
+
+        binding.btnDelete.setOnClickListener {
+            deleteArtwork(artwork!!.id)
+        }
+    }
+
+    private fun prepareArtworkUpdate() {
+        val fragment = UpdateArtworkFragment()
+
+        if (artwork == null) {
+            return
+        }
+
+        val args = Bundle()
+        args.putInt("id", artwork!!.id)
+        args.putString("title", artwork!!.title)
+        args.putString("description", artwork!!.description)
+        fragment.arguments = args
+
+        mainActivity.replaceFragment(fragment)
+    }
+    private fun deleteArtwork(id: Int) {
+        if (! mainActivity.dbHelper.deleteArtwork(id)) {
+            Toast.makeText(requireContext(), "Delete failed!", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Record deleted", Toast.LENGTH_SHORT).show()
+            mainActivity.replaceFragment(FilterAndListFragment())
         }
     }
 

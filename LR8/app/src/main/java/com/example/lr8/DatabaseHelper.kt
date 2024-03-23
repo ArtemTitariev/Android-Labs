@@ -87,6 +87,25 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return id
     }
 
+    fun updateArtwork(id: Int, title: String, description: String): Boolean {
+        val db = this.writableDatabase
+
+        val contentValues = ContentValues()
+        contentValues.apply {
+            put("title", title)
+            put("description", description)
+        }
+        val updated = db.update(TABLE_ARTWORKS, contentValues, "$COLUMN_ID = ?", arrayOf(id.toString()))
+        return updated > 0
+    }
+
+    fun deleteArtwork(id: Int): Boolean {
+        val db = this.writableDatabase
+
+        val deleted = db.delete(TABLE_ARTWORKS, "$COLUMN_ID = ?", arrayOf(id.toString()))
+        return deleted > 0
+    }
+
     @SuppressLint("Range")
     fun getAuthorById(authorId: Int): Author? {
         val db = readableDatabase
@@ -353,7 +372,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             insertArtworkStatement?.execute()
 
             // Artwork 6
-            insertArtworkStatement?.bindString(1, "The Last Supper 6")
+            insertArtworkStatement?.bindString(1, "The Last Supper")
             insertArtworkStatement?.bindString(2, "1495")
             insertArtworkStatement?.bindString(3, "A famous painting by Leonardo da Vinci")
             insertArtworkStatement?.bindString(4, "3") // Author ID 3
