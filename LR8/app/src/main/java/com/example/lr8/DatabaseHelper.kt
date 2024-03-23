@@ -1,4 +1,5 @@
 import android.annotation.SuppressLint
+import android.content.ClipDescription
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -137,7 +138,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 val year = it.getInt(it.getColumnIndex("year"))
                 val description = it.getString(it.getColumnIndex("description"))
 
-
                 // Отримання об'єкта Author за його id
                 val author = getAuthorById(it.getInt(it.getColumnIndex("author_id")))
 
@@ -151,6 +151,38 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             }
         }
         return artworkList
+    }
+
+    @SuppressLint("Range")
+    fun getArtwork(title: String, description: String): Artwork? {
+
+
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_ARTWORKS " +
+                "WHERE title = ? AND description = ? " +
+                "LIMIT 1"
+        val selectionArgs = arrayOf(title, description)
+
+        val cursor = db.rawQuery(query, selectionArgs)
+        cursor.use {
+            while (it.moveToFirst()) {
+                val id = it.getInt(it.getColumnIndex(COLUMN_ID))
+                val title = it.getString(it.getColumnIndex("title"))
+                val year = it.getInt(it.getColumnIndex("year"))
+                val description = it.getString(it.getColumnIndex("description"))
+
+                // Отримання об'єкта Author за його id
+                val author = getAuthorById(it.getInt(it.getColumnIndex("author_id")))
+
+                // Отримання об'єкта ArtGenre за його id
+                val genre = getArtGenreById(it.getInt(it.getColumnIndex("genre_id")))
+
+                checkAuthorAndGenre(author, genre)
+
+                return Artwork(id, title, year, description, author!!, genre!!)
+            }
+        }
+        return null
     }
 
     private fun checkAuthorAndGenre(

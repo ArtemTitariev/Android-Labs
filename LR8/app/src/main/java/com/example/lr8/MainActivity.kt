@@ -1,21 +1,19 @@
 package com.example.lr8
 
 import DatabaseHelper
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.example.lr8.databinding.ActivityMainBinding
-import com.example.lr8.models.Artwork
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var dbHelper: DatabaseHelper
-    private lateinit var db: SQLiteDatabase
+    lateinit var dbHelper: DatabaseHelper
+        private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,39 +22,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         dbHelper = DatabaseHelper(this)
-        db = dbHelper.writableDatabase
 
-        setupActivity()
+        // Початковий фрагмент - список творів
+        replaceFragment(FilterAndListFragment())
     }
 
-    private fun setupActivity() {
+    fun replaceFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
 
-        val adapter = ArtworkAdapter(dbHelper.getArtworkList())
-        binding.rvArtworks.adapter = adapter
-        binding.rvArtworks.layoutManager = LinearLayoutManager(this)
+        transaction.replace(R.id.fragmentContainer, fragment)
+        transaction.addToBackStack(null)
 
-        // Filter listener
-        binding.btnFilter.setOnClickListener {
-            val genreFilter: String = binding.etGenre.text.toString()
-            val yearFilter: Int? =  if (binding.etYear.text.toString() != "")
-                binding.etYear.text.toString().toInt()
-            else null
-
-            if (genreFilter == "" && yearFilter == null) {
-                Toast.makeText(this, "Enter data to filter!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            try {
-                val filteredList = dbHelper.getFilteredArtworkList(genreFilter, yearFilter)
-                adapter.updateList(filteredList)
-            }
-            catch (e: NullPointerException) {
-                Toast.makeText(this, "Not found!", Toast.LENGTH_SHORT).show()
-            }
-        }
+        transaction.commit()
     }
-
-
-
 }

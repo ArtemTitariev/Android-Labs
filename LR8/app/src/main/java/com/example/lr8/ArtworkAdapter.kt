@@ -10,9 +10,24 @@ import com.example.lr8.models.Artwork
 
 class ArtworkAdapter(private var artworkList: List<Artwork>) : RecyclerView.Adapter<ArtworkAdapter.ArtworkViewHolder>() {
 
+    private var itemClickListener: ((Artwork) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (Artwork) -> Unit) {
+        itemClickListener = listener
+    }
+
     inner class ArtworkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.textViewTitle)
         val genreTextView: TextView = itemView.findViewById(R.id.textViewGenre)
+
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    itemClickListener?.invoke(artworkList[position])
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtworkViewHolder {
