@@ -1,12 +1,11 @@
+package com.example.lr8.database
+
 import android.annotation.SuppressLint
-import android.content.ClipDescription
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import android.widget.Toast
-import com.example.lr8.MainActivity
 import com.example.lr8.models.ArtGenre
 import com.example.lr8.models.Artwork
 import com.example.lr8.models.Author
@@ -49,42 +48,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.execSQL("DROP TABLE IF EXISTS $TABLE_AUTHORS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_ART_GENRES")
         onCreate(db)
-    }
-
-    fun addAuthor(author: Author): Long {
-        val db = this.writableDatabase
-        val values = ContentValues().apply {
-            put("first_name", author.firstName)
-            put("last_name", author.lastName)
-            put("email", author.email)
-        }
-        val id = db.insert(TABLE_AUTHORS, null, values)
-        db.close()
-        return id
-    }
-
-    fun addArtGenre(artGenre: ArtGenre): Long {
-        val db = this.writableDatabase
-        val values = ContentValues().apply {
-            put("genre", artGenre.genre)
-        }
-        val id = db.insert(TABLE_ART_GENRES, null, values)
-        db.close()
-        return id
-    }
-
-    fun addArtwork(artwork: Artwork): Long {
-        val db = this.writableDatabase
-        val values = ContentValues().apply {
-            put("title", artwork.title)
-            put("year", artwork.year)
-            put("description", artwork.description)
-            put("author_id", artwork.author.id)
-            put("genre_id", artwork.genre.id)
-        }
-        val id = db.insert(TABLE_ARTWORKS, null, values)
-        db.close()
-        return id
     }
 
     fun updateArtwork(id: Int, title: String, description: String): Boolean {
@@ -304,7 +267,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         )
 
         val insertGenreStatement = db?.compileStatement(
-            "INSERT INTO ${TABLE_ART_GENRES} (genre) VALUES (?)"
+            "INSERT INTO $TABLE_ART_GENRES (genre) VALUES (?)"
         )
 
         db?.beginTransaction()

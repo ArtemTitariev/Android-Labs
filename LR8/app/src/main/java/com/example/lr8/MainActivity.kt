@@ -1,10 +1,9 @@
 package com.example.lr8
 
-import DatabaseHelper
+import com.example.lr8.database.DatabaseHelper
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.example.lr8.databinding.ActivityMainBinding
 
 
@@ -23,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
 
-        // Початковий фрагмент - список творів
         replaceFragment(FilterAndListFragment())
     }
 

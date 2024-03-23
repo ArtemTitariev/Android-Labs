@@ -56,7 +56,6 @@ class UpdateArtworkFragment : Fragment() {
         }
     }
 
-
     private fun validateInputs(title: String, description: String): Boolean {
         if (title.length < 2) {
             Toast.makeText(requireContext(), "Title is too short!", Toast.LENGTH_LONG).show()
