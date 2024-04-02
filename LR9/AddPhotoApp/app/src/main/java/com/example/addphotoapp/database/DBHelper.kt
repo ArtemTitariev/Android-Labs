@@ -11,9 +11,9 @@ class DBHelper(context: Context) :
     companion object {
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "PhotoDB.db"
-        private const val TABLE_NAME = "Photos"
-        private const val COLUMN_ID = "id"
-        private const val COLUMN_PHOTO_PATH = "photo_path"
+        const val TABLE_NAME = "Photos"
+        const val COLUMN_ID = "id"
+        const val COLUMN_PHOTO_PATH = "photo_path"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
