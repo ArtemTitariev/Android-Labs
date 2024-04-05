@@ -73,10 +73,6 @@ class ListFragment : Fragment() {
         }
         cursor?.close()
 
-        photoList.add("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr_FsBGtjbkB8UIjf3uIpRdmMky4_yQuUj2w&s")
-        photoList.add("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBx1TOOPnFabU731b6y1wHZCasRwIHfGiJqQ&s")
-        photoList.add("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1eHPKrFrmEX5MnGXylO1AK-t6GRQFiOvhOQ&s")
-
         return photoList
     }
 }

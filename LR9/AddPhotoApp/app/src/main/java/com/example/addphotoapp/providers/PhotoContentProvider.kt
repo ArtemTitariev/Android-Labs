@@ -7,12 +7,13 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.database.SQLException
 import android.net.Uri
+import android.util.Log
 
 class PhotoContentProvider : ContentProvider() {
 
     companion object {
         const val AUTHORITY = "com.example.addphotoapp.photoprovider"
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/photos")
+        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/Photos")
 
         // Коди для відповідності URI
         private const val PHOTOS = 1
@@ -21,8 +22,8 @@ class PhotoContentProvider : ContentProvider() {
         private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
         init {
-            uriMatcher.addURI(AUTHORITY, "photos", PHOTOS)
-            uriMatcher.addURI(AUTHORITY, "photos/#", PHOTO_ID)
+            uriMatcher.addURI(AUTHORITY, "Photos", PHOTOS)
+            uriMatcher.addURI(AUTHORITY, "Photos/#", PHOTO_ID)
         }
     }
 
@@ -30,6 +31,10 @@ class PhotoContentProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
         dbHelper = DBHelper(context!!)
+        dbHelper.getWritableDatabase()
+
+        Log.d("--provider", "ON_CREATE")
+
         return true
     }
 
@@ -40,8 +45,10 @@ class PhotoContentProvider : ContentProvider() {
         selectionArgs: Array<out String>?,
         sortOrder: String?
     ): Cursor? {
+        Log.d("--provider", "QUERY")
+
         val db = dbHelper.readableDatabase
-        return when (uriMatcher.match(uri)) {
+        val result = when (uriMatcher.match(uri)) {
             PHOTOS -> db.query(
                 DBHelper.TABLE_NAME,
                 projection,
@@ -69,12 +76,15 @@ class PhotoContentProvider : ContentProvider() {
 
             else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
+
+        Log.d("--provider", result.toString())
+        return result
     }
 
     override fun getType(uri: Uri): String? {
         return when (uriMatcher.match(uri)) {
-            PHOTOS -> "vnd.android.cursor.dir/vnd.example.photos"
-            PHOTO_ID -> "vnd.android.cursor.item/vnd.example.photos"
+            PHOTOS -> "vnd.android.cursor.dir/vnd.com.example.addphotoapp.photoprovider.Photos"
+            PHOTO_ID -> "vnd.android.cursor.item/vnd.com.example.addphotoapp.photoprovider.Photos"
             else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
     }
