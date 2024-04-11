@@ -3,9 +3,9 @@ package com.example.lr10
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
@@ -56,26 +56,8 @@ class GalleryFragment : Fragment() {
 //        photoAdapter.notifyItemInserted(photoPaths.size - 1)
         photoAdapter.notifyDataSetChanged()
 
-//        val manager = getNotificationManager()
-
         view.findViewById<Button>(R.id.btnTakePhoto).setOnClickListener {
             dispatchTakePictureIntent()
-
-//            Log.d("--notice", "after took a photo")
-//            val notification = NotificationCompat.Builder(requireContext(), "normal")
-//                .setContentTitle("This is content title")
-//                .setContentText("This is content text")
-//                .setSmallIcon(R.drawable.icon)
-//                .setLargeIcon(
-//                    BitmapFactory.decodeResource(
-//                        resources,
-//                        R.drawable.icon
-//                    )
-//                )
-//                .build()
-//            manager.notify(1, notification)
-//
-//            Log.d("--notice", "End--")
         }
         return view
     }
@@ -152,34 +134,32 @@ class GalleryFragment : Fragment() {
 
     private fun notify(manager: NotificationManager) {
         Log.d("--notice", "after took a photo")
+
+        val bitmap = BitmapFactory.decodeFile(currentPhotoPath)
+
         val notification = NotificationCompat.Builder(requireContext(), "normal")
-            .setContentTitle("This is content title")
-//            .setContentText("This is content text")
-//            .setSmallIcon(R.drawable.icon)
-//            .setLargeIcon(
-//                BitmapFactory.decodeResource(
-//                    resources,
-//                    R.drawable.icon
-//                )
-//            )
-//            .build()
-            .setStyle(
-                NotificationCompat.BigPictureStyle()
-                    .bigPicture(BitmapFactory.decodeResource(resources, R.drawable.icon))
-            )
+            .setContentTitle("Content title")
             .setSmallIcon(R.drawable.icon)
-            .setLargeIcon(
-                BitmapFactory.decodeResource(
-                    resources,
-                    R.drawable.icon
-                )
-            )
-            .setContentIntent(pi)
-            .setAutoCancel(true)
+            .setLargeIcon(bitmap)
+            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
+            .setContentIntent(getPendingIntent()) // Додавання PendingIntent
             .build()
 
         manager.notify(1, notification)
 
         Log.d("--notice", "End--")
+    }
+
+    private fun getPendingIntent(): PendingIntent {
+        // Створення інтенту для нової активності
+        val intent = Intent(requireContext(), PhotoActivity::class.java).apply {
+            // Передача шляху до зображення в інтент
+            putExtra("image_path", currentPhotoPath)
+            // Забезпечення того, що активність буде створена заново
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        // Повернення PendingIntent
+        return PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 }
