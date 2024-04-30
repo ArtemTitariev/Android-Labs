@@ -1,6 +1,8 @@
 package com.example.lr13
 
-class Todo(val id: Int, val title: String, val status: TodoStatus) {
+import java.io.Serializable
+
+class Todo(val id: Int, val title: String, val status: TodoStatus): Serializable {
     enum class TodoStatus {
         COMPLETED,
         INCOMPLETE

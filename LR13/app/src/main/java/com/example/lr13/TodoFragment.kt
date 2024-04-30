@@ -32,14 +32,10 @@ class TodoFragment : Fragment() {
         return binding.root
     }
 
-    private fun setupRecyclerView() {
-        val todoList = mutableListOf<Todo>()
-        for (i in 1..10) {
-            val todo = Todo(i,"Todo $i", if (i % 2 == 0) Todo.TodoStatus.COMPLETED else Todo.TodoStatus.INCOMPLETE)
-            todoList.add(todo)
-        }
+    fun setupRecyclerView() {
+        val todoList = (requireActivity() as MainActivity).getTodoList()
 
-        todoAdapter = TodoAdapter()
+        todoAdapter = TodoAdapter(requireActivity().supportFragmentManager)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = todoAdapter

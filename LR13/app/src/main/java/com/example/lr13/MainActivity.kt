@@ -11,11 +11,16 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.lr13.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ITodoChangeListener {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var todoAdapter: TodoAdapter
+
+    private lateinit var todoList: MutableList<Todo>
+
+    override fun onTodoChange() {
+        val todoFragment = supportFragmentManager.findFragmentById(R.id.container) as? TodoFragment
+        todoFragment?.setupRecyclerView()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,11 +30,29 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // Ініціалізація todoList
+        todoList = mutableListOf()
+        for (i in 1..15) {
+            val todo = Todo(i, "Todo $i", if (i % 2 == 0) Todo.TodoStatus.COMPLETED else Todo.TodoStatus.INCOMPLETE)
+            todoList.add(todo)
+        }
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, TodoFragment())
             .commit()
     }
 
+    // Метод для отримання списку Todo з MainActivity
+    fun getTodoList(): MutableList<Todo> = todoList
+    fun addTodo(todo: Todo) = todoList.add(todo)
+    fun removeTodo(todo: Todo) = todoList.remove(todo)
+    fun editTodoStatus(todo: Todo, newStatus: Todo.TodoStatus) {
+        val index = todoList.indexOf(todo)
+        if (index != -1) {
+            val updatedTodo = Todo(todo.id, todo.title, newStatus)
+            todoList[index] = updatedTodo
+        }
+    }
 
 
 

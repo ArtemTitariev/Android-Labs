@@ -6,4 +6,5 @@
     <color name="colorPrimary">#4986EF</color>
     <color name="colorPrimaryDark">#003797</color>
     <color name="colorAccent">#06A890</color>
+    <color name="colorDeleteButton">#AC1D1D</color>
 </resources>
