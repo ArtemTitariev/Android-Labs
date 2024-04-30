@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), ITodoChangeListener {
         // Ініціалізація todoList
         todoList = mutableListOf()
         for (i in 1..15) {
-            val todo = Todo(i, "Todo $i", if (i % 2 == 0) Todo.TodoStatus.COMPLETED else Todo.TodoStatus.INCOMPLETE)
+            val todo = Todo("Todo $i", if (i % 2 == 0) Todo.TodoStatus.COMPLETED else Todo.TodoStatus.INCOMPLETE)
             todoList.add(todo)
         }
 
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(), ITodoChangeListener {
     fun editTodoStatus(todo: Todo, newStatus: Todo.TodoStatus) {
         val index = todoList.indexOf(todo)
         if (index != -1) {
-            val updatedTodo = Todo(todo.id, todo.title, newStatus)
+            val updatedTodo = Todo(todo.title, newStatus)
             todoList[index] = updatedTodo
         }
     }
